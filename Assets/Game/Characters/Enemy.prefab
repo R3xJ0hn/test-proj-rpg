@@ -2142,12 +2142,20 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: m_Speed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Acceleration
-      value: 120
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_AngularSpeed
-      value: 1000
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9135078088253673182, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_LocalPosition.x
