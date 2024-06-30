@@ -8,7 +8,7 @@ namespace RPG.Movement
     {
         NavMeshAgent MeshAgent;
 
-        private void Start()
+        private void Awake()
         {
             MeshAgent = GetComponent<NavMeshAgent>();
         }
@@ -17,6 +17,7 @@ namespace RPG.Movement
         {
             UpdateAnimator();
         }
+
         public void MoveTo(Vector3 destination)
         { 
             MeshAgent.isStopped = false;

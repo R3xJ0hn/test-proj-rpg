@@ -44,8 +44,8 @@ namespace RPG.Controller
 
         private void AttackEnemy()
         {
-            if (PerformAttack())
-            {
+            if (SetAnAttack())
+            { 
                 RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
                 foreach (RaycastHit hit in hits)
                     if (hit.collider.CompareTag("Enemy"))
@@ -58,7 +58,7 @@ namespace RPG.Controller
             }
         }
 
-        private bool PerformAttack()
+        private bool SetAnAttack()
         {
             if (DoubleClick()) return true;
 
