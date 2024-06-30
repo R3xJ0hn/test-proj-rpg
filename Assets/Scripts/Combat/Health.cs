@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -11,7 +9,6 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health = Mathf.Max(health - damage, 0);
-        print(health);
 
         if (health == 0)
             DeathBehaviour();
