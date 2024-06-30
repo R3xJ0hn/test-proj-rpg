@@ -5,12 +5,13 @@ namespace RPG.Movement
 {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
-    [SerializeField]
+    [RequireComponent(typeof(Health))]
 
     public class Mover : MonoBehaviour
     {
         NavMeshAgent agent;
         Animator animator;
+        Health health;
 
         [SerializeField] float maxSpeed = 5.66f;
         [SerializeField] float minSpeed = 3.00f;
@@ -24,6 +25,8 @@ namespace RPG.Movement
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            health = GetComponent<Health>();
+
             animator.applyRootMotion = true;
             animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
 
@@ -41,6 +44,7 @@ namespace RPG.Movement
 
         public void MoveTo(Vector3 destination)
         {
+            if (health.IsDead) return;
             agent.isStopped = false;
             agent.destination = destination;
         }
@@ -52,6 +56,8 @@ namespace RPG.Movement
 
         private void UpdateSpeed()
         {
+            agent.enabled = !health.IsDead;
+
             if (agent.velocity.magnitude > 0)
             {
                 agent.speed = Mathf.Min(agent.speed + speedIncreaseRate * Time.deltaTime, maxSpeed);

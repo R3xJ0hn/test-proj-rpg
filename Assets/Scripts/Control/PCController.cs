@@ -1,61 +1,57 @@
-using RPG.Combat;
+﻿using RPG.Combat;
 using RPG.Movement;
+using UnityEngine;
 
 namespace RPG.Controller
 {
-    using UnityEngine;
-
-    public class PlayerController : MonoBehaviour
+    public class PCController : EntityController
     {
         private float clicked = 0;
         private float clickTime = 0;
         private const float ClickDelay = 0.3f;
         private bool prepToAttack = false;
 
-        private Fighter fighter;
-        private Mover mover;
         private Camera mainCamera;
-        RaycastHit? targetEnemy;
-
+        private GameObject targetEnemy;
 
         private void Awake()
         {
-            fighter = GetComponent<Fighter>();
-            mover = GetComponent<Mover>();
             mainCamera = Camera.main;
+            InitializeComponents();
         }
-
-        void LateUpdate()
+        private void LateUpdate()
         {
             MovePlayer();
             AttackEnemy();
         }
+
         private void MovePlayer()
         {
             if (Input.GetMouseButton(1))
             {
                 if (Physics.Raycast(GetMouseRay(), out RaycastHit hit))
                 {
-                    CancelAttack();
-                    mover.MoveTo(hit.point);
+                    MoveTo(hit.point);
                 }
             }
         }
 
-        private void AttackEnemy()
+        public void AttackEnemy()
         {
             if (SetAnAttack())
-            { 
+            {
                 RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
                 foreach (RaycastHit hit in hits)
+                {
                     if (hit.collider.CompareTag("Enemy"))
-                        targetEnemy = hit;
+                    {
+                        targetEnemy = hit.collider.gameObject;
+                        break;
+                    }
+                }
             }
 
-            if (targetEnemy.HasValue)
-            {
-                fighter.Attack(targetEnemy.Value);
-            }
+            Attack(targetEnemy);
         }
 
         private bool SetAnAttack()
@@ -77,11 +73,10 @@ namespace RPG.Controller
             return false;
         }
 
-        private void CancelAttack()
+        public override void CancelAttack()
         {
-            targetEnemy = null;
             prepToAttack = false;
-            fighter.CancellAttack();
+            base.CancelAttack();
         }
 
         private Ray GetMouseRay()
@@ -113,6 +108,8 @@ namespace RPG.Controller
 
             return false;
         }
+
     }
+
 
 }

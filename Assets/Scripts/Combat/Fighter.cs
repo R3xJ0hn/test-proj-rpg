@@ -11,11 +11,11 @@ namespace RPG.Combat
         [SerializeField] float weaponDamage = 5f;
 
         Health target;
-        float timeSinceLastAttack = 0f;
+        float timeSinceLastAttack = Mathf.Infinity;
 
-        public void Attack(RaycastHit targetHit)
+        public void Attack(GameObject targetSelected)
         {
-            target = targetHit.collider.GetComponent<Health>();
+            target = targetSelected.GetComponent<Health>();
             if (!CanAttack()) return;
 
             timeSinceLastAttack += Time.deltaTime;
@@ -53,7 +53,8 @@ namespace RPG.Combat
 
         public bool CanAttack()
         {
-            return target != null && !target.IsDead;
+            bool meIsDead = GetComponent<Health>().IsDead;
+            return target != null && !target.IsDead && !meIsDead;
         }
 
         public void CancellAttack()

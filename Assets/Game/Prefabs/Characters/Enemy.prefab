@@ -767,7 +767,7 @@ GameObject:
   - component: {fileID: 4599244806378368345}
   m_Layer: 0
   m_Name: Character_Soldier_01
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2133,6 +2133,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -400500877090610885, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: weaponDamage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 507591598306384740, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -2143,7 +2147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Speed
-      value: 3.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Acceleration
@@ -2206,10 +2210,31 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9135078088253673182, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4599244806389650743}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 507591598306384740, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2886008793340725476}
   m_SourcePrefab: {fileID: 100100000, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
 --- !u!4 &4533758853494339906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9135078088253673182, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
   m_PrefabInstance: {fileID: 4624480722145474460}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5126828560251170040 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 507591598306384740, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+  m_PrefabInstance: {fileID: 4624480722145474460}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2886008793340725476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5126828560251170040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab8b4d5aaaf63f4d8da3e0564f0e09e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseDistance: 7
