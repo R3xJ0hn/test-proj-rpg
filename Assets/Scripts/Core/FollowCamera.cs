@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Core
 {
     public class FollowCamera : MonoBehaviour
     {
-        [SerializeField] Transform PlayerTarget;
+        Transform PlayerTarget;
 
         void LateUpdate()
         {
+            if (PlayerTarget == null)
+                PlayerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+
             transform.position = PlayerTarget.position;
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,6 +5,7 @@ namespace RPG.Movement
 {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
+    [SerializeField]
 
     public class Mover : MonoBehaviour
     {
@@ -13,9 +13,12 @@ namespace RPG.Movement
         Animator animator;
 
         [SerializeField] float maxSpeed = 5.66f;
+        [SerializeField] float minSpeed = 3.00f;
         [SerializeField] float stamina = 100.0f;
         [SerializeField] float staminaDrainRate = 1f;
         [SerializeField] float staminaRecoveryRate = 10f;
+        [SerializeField] float speedIncreaseRate = 0.5f;
+        [SerializeField] float staminaDrainSpeedThreshold = 3.0f;
 
         private void Awake()
         {
@@ -26,12 +29,13 @@ namespace RPG.Movement
 
             agent.stoppingDistance = 0.5f;
             agent.angularSpeed = 360;
+            agent.speed = minSpeed;
         }
 
         void Update()
         {
-            UpdateStamina();
             UpdateSpeed();
+            UpdateStamina();
             UpdateAnimator();
         }
 
@@ -46,19 +50,31 @@ namespace RPG.Movement
             agent.isStopped = true;
         }
 
+        private void UpdateSpeed()
+        {
+            if (agent.velocity.magnitude > 0)
+            {
+                agent.speed = Mathf.Min(agent.speed + speedIncreaseRate * Time.deltaTime, maxSpeed);
+            }
+            else
+            {
+                agent.speed = minSpeed;
+            }
+        }
+
         private void UpdateStamina()
         {
             if (agent.velocity.magnitude > 0)
-                stamina -= staminaDrainRate * Time.deltaTime;
+            {
+                if (agent.speed > staminaDrainSpeedThreshold)
+                    stamina -= staminaDrainRate * Time.deltaTime;
+            }
             else
+            {
                 stamina += staminaRecoveryRate * Time.deltaTime;
+            }
 
             stamina = Mathf.Clamp(stamina, 0, 100);
-        }
-
-        private void UpdateSpeed()
-        {
-            agent.speed = maxSpeed * (stamina / 100);
         }
 
         private void UpdateAnimator()
