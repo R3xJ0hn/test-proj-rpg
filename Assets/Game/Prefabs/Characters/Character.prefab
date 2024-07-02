@@ -116,9 +116,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 5.66
+  minSpeed: 1.5
   stamina: 100
-  staminaDrainRate: 1
-  staminaRecoveryRate: 10
+  staminaDrainRate: 5
+  staminaRecoveryRate: 20
+  runningThreshold: 3
 --- !u!114 &5586610481821448511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,5 +147,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponRange: 1.5
-  timeBetweenAttacks: 1
+  timeBetweenAttacks: 0.4
   weaponDamage: 50

@@ -1,6 +1,4 @@
-﻿using RPG.Combat;
-using RPG.Movement;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RPG.Controller
 {
@@ -23,6 +21,7 @@ namespace RPG.Controller
         {
             MovePlayer();
             AttackEnemy();
+            SetSprint();
         }
 
         private void MovePlayer()
@@ -61,7 +60,7 @@ namespace RPG.Controller
             if (Input.GetKey(KeyCode.A))
                 prepToAttack = true;
 
-            if (prepToAttack && Input.GetMouseButtonDown(0))
+            if (prepToAttack && Input.GetMouseButton(0))
                 return true;
 
             if (Input.GetKey(KeyCode.S))
@@ -73,9 +72,19 @@ namespace RPG.Controller
             return false;
         }
 
+        private void SetSprint()
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                Sprint();
+            }
+           
+        }
+
         public override void CancelAttack()
         {
             prepToAttack = false;
+            targetEnemy = null;
             base.CancelAttack();
         }
 

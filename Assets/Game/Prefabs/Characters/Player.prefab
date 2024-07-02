@@ -2129,6 +2129,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -400500877090610885, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: weaponDamage
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 507591598306384740, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2142,8 +2146,16 @@ PrefabInstance:
       value: 5.66
       objectReference: {fileID: 0}
     - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: minSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: staminaDrainRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: staminaRecoveryRate
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9135078088253673182, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_LocalPosition.x

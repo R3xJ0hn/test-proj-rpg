@@ -6,16 +6,26 @@ namespace RPG.Controller
 {
     [RequireComponent(typeof(Fighter))]
     [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(Health))]
+
     public class EntityController : MonoBehaviour
     {
-        private Fighter fighter;
         private Mover mover;
+        private Health health;
+        private Fighter fighter;
         private GameObject _targetEntity;
+
+        public bool AllowedToRun
+        {
+            get => mover.allowWalkingSpeedIncrease;
+            set => mover.allowWalkingSpeedIncrease = value;
+        }
 
         protected void InitializeComponents()
         {
             fighter = GetComponent<Fighter>();
             mover = GetComponent<Mover>();
+            health = GetComponent<Health>();
         }
 
         public void MoveTo(Vector3 position)
@@ -24,9 +34,9 @@ namespace RPG.Controller
             mover.MoveTo(position);
         }
 
-        public void InAttackRange()
+        public void Sprint()
         {
-
+            mover.Sprint();
         }
 
         public virtual void Attack(GameObject targetEntity)
@@ -43,6 +53,11 @@ namespace RPG.Controller
         {
             _targetEntity = null;
             fighter.CancellAttack();
+        }
+
+        public bool IsDead() 
+        {
+            return health.IsDead;
         }
 
     }

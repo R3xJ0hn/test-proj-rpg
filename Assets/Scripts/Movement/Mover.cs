@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,20 +7,24 @@ namespace RPG.Movement
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Health))]
-
     public class Mover : MonoBehaviour
     {
-        NavMeshAgent agent;
-        Animator animator;
-        Health health;
+        private NavMeshAgent agent;
+        private Animator animator;
+        private Health health;
 
-        [SerializeField] float maxSpeed = 5.66f;
-        [SerializeField] float minSpeed = 3.00f;
-        [SerializeField] float stamina = 100.0f;
-        [SerializeField] float staminaDrainRate = 1f;
-        [SerializeField] float staminaRecoveryRate = 10f;
-        [SerializeField] float speedIncreaseRate = 0.5f;
-        [SerializeField] float staminaDrainSpeedThreshold = 3.0f;
+        [SerializeField] private float maxSpeed = 5.66f;
+        [SerializeField] private float minSpeed = 1.5f;
+        [SerializeField] private float stamina = 100.0f;
+        [SerializeField] private float staminaDrainRate = 10f;
+        [SerializeField] private float staminaRecoveryRate = 5f;
+        [SerializeField] private float runningThreshold = 3f;
+        [SerializeField] private float sprintDuration = 3.0f;
+
+        private readonly float speedIncreaseRate = 0.5f;
+        private bool isSprinting = false;
+
+        public bool allowWalkingSpeedIncrease { get; set; } = true;
 
         private void Awake()
         {
@@ -35,8 +40,14 @@ namespace RPG.Movement
             agent.speed = minSpeed;
         }
 
-        void Update()
+        private void Update()
         {
+            if (health.IsDead)
+            {
+                agent.enabled = false;
+                return;
+            }
+
             UpdateSpeed();
             UpdateStamina();
             UpdateAnimator();
@@ -51,36 +62,66 @@ namespace RPG.Movement
 
         public void Stop()
         {
-            agent.isStopped = true;
+            isSprinting = false;
+            if (agent.enabled)
+                agent.isStopped = true;
+        }
+
+        public void Sprint()
+        {
+            if (stamina >= 75)
+            {
+                isSprinting = true;
+                StartCoroutine(SprintCoroutine());
+            }
         }
 
         private void UpdateSpeed()
         {
-            agent.enabled = !health.IsDead;
+            print("Running: " + isSprinting + " | Speed:" + agent.speed + " | Stamina:" + stamina);
 
-            if (agent.velocity.magnitude > 0)
+            if (IsMoving() && allowWalkingSpeedIncrease)
             {
-                agent.speed = Mathf.Min(agent.speed + speedIncreaseRate * Time.deltaTime, maxSpeed);
+                if (!isSprinting)
+                    agent.speed = Mathf.Min(agent.speed + 
+                        speedIncreaseRate * Time.deltaTime, runningThreshold);
             }
             else
             {
+                isSprinting = false;
                 agent.speed = minSpeed;
             }
         }
 
+        private IEnumerator SprintCoroutine()
+        {
+            agent.speed = maxSpeed;
+            yield return new WaitForSeconds(sprintDuration);
+            isSprinting = false;
+            agent.speed = runningThreshold + ((maxSpeed - runningThreshold) * (stamina / 100));
+        }
+
         private void UpdateStamina()
         {
-            if (agent.velocity.magnitude > 0)
+            if (isSprinting)
             {
-                if (agent.speed > staminaDrainSpeedThreshold)
+                if (agent.speed > runningThreshold)
                     stamina -= staminaDrainRate * Time.deltaTime;
             }
             else
             {
-                stamina += staminaRecoveryRate * Time.deltaTime;
+                if (IsMoving())
+                    stamina += (staminaRecoveryRate * 0.5f) * Time.deltaTime;
+                else
+                    stamina += staminaRecoveryRate * Time.deltaTime;
             }
 
             stamina = Mathf.Clamp(stamina, 0, 100);
+        }
+
+        private bool IsMoving()
+        {
+            return agent.velocity.magnitude > 0;
         }
 
         private void UpdateAnimator()

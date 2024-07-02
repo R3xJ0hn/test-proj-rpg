@@ -4,10 +4,12 @@ using UnityEngine;
 namespace RPG.Combat
 {
     [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(Mover))]
+
     public class Fighter : MonoBehaviour
     {
         [SerializeField] float weaponRange = 1.5f;
-        [SerializeField] float timeBetweenAttacks = 4f;
+        [SerializeField] float timeBetweenAttacks = 0.5f;
         [SerializeField] float weaponDamage = 5f;
 
         Health target;
@@ -16,6 +18,7 @@ namespace RPG.Combat
         public void Attack(GameObject targetSelected)
         {
             target = targetSelected.GetComponent<Health>();
+
             if (!CanAttack()) return;
 
             timeSinceLastAttack += Time.deltaTime;
@@ -23,7 +26,10 @@ namespace RPG.Combat
                 target.transform.position) < weaponRange;
 
             if (this.target != null && !isInRange)
+            {
+                // Move closer to the player
                 GetComponent<Mover>().MoveTo(this.target.transform.position);
+            }
             else
             {
                 GetComponent<Mover>().Stop();
@@ -42,7 +48,8 @@ namespace RPG.Combat
             }
         }
 
-        //Animation Event triggered by Attack Animation
+        //Animation Event
+        //triggered by Attack Animation
         void Hit()
         {
             if (target == null) return;
@@ -60,8 +67,8 @@ namespace RPG.Combat
         public void CancellAttack()
         {
             target = null;
+            GetComponent<Animator>().ResetTrigger("attack");
             GetComponent<Animator>().SetTrigger("stopAttack");
-            GetComponent<Mover>().Stop();
         }
 
     }

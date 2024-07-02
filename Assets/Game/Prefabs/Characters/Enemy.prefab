@@ -2135,7 +2135,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -400500877090610885, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: weaponDamage
-      value: 10
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -400500877090610885, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: timeBetweenAttacks
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 507591598306384740, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Name
@@ -2145,9 +2149,25 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: maxSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: minSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: staminaDrainRate
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351686997838560889, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
+      propertyPath: staminaRecoveryRate
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Speed
-      value: 3
+      value: 5.66
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_Acceleration
@@ -2155,11 +2175,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_AngularSpeed
-      value: 120
+      value: 360
       objectReference: {fileID: 0}
     - target: {fileID: 3673228090810971011, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_StoppingDistance
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 9135078088253673182, guid: 756babc9c7888e9419b9a581575f23f0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2237,4 +2257,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab8b4d5aaaf63f4d8da3e0564f0e09e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patrolPath: {fileID: 0}
+  suspicionDuration: 7
+  wanderRadius: 5
+  lookAroundDuration: 2
   chaseDistance: 7
+  wayPointTolerance: 1
+  wayPointDwellTime: 3
+  viewDistance: 10
+  viewAngle: 45
