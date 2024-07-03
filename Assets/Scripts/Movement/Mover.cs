@@ -60,7 +60,7 @@ namespace RPG.Movement
             agent.destination = destination;
         }
 
-        public void Stop()
+        public void StopMoving()
         {
             isSprinting = false;
             if (agent.enabled)
@@ -78,13 +78,14 @@ namespace RPG.Movement
 
         private void UpdateSpeed()
         {
-            print("Running: " + isSprinting + " | Speed:" + agent.speed + " | Stamina:" + stamina);
-
             if (IsMoving() && allowWalkingSpeedIncrease)
             {
                 if (!isSprinting)
                     agent.speed = Mathf.Min(agent.speed + 
                         speedIncreaseRate * Time.deltaTime, runningThreshold);
+                else
+                    agent.speed = runningThreshold + 
+                        ((maxSpeed - runningThreshold) * (stamina / 100));
             }
             else
             {
@@ -98,7 +99,6 @@ namespace RPG.Movement
             agent.speed = maxSpeed;
             yield return new WaitForSeconds(sprintDuration);
             isSprinting = false;
-            agent.speed = runningThreshold + ((maxSpeed - runningThreshold) * (stamina / 100));
         }
 
         private void UpdateStamina()
@@ -128,5 +128,6 @@ namespace RPG.Movement
         {
             animator.SetFloat("forwardSpeed", agent.velocity.magnitude);
         }
+
     }
 }

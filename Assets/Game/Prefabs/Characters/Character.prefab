@@ -121,6 +121,7 @@ MonoBehaviour:
   staminaDrainRate: 5
   staminaRecoveryRate: 20
   runningThreshold: 3
+  sprintDuration: 3
 --- !u!114 &5586610481821448511
 MonoBehaviour:
   m_ObjectHideFlags: 0

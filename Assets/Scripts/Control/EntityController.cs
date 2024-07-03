@@ -55,7 +55,12 @@ namespace RPG.Controller
             fighter.CancellAttack();
         }
 
-        public bool IsDead() 
+        public void StopMoving()
+        {
+            mover.StopMoving();
+        }
+
+        public bool IsDead()
         {
             return health.IsDead;
         }
