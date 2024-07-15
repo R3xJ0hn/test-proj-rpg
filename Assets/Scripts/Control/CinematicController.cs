@@ -2,7 +2,7 @@
 using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
-namespace RPG.Controller
+namespace RPG.Controls
 {
     [RequireComponent(typeof(PlayableDirector))]
 
@@ -17,7 +17,7 @@ namespace RPG.Controller
         {
             player = GameObject.FindWithTag("Player");
             playableDirector = GetComponent<PlayableDirector>();
-            controller = player.GetComponent<PCController>();
+            controller = player.GetComponent<EntityController>();
 
             playableDirector.played += PlaySequence;
             playableDirector.stopped += StopSequence;
@@ -34,8 +34,8 @@ namespace RPG.Controller
 
         private void PlaySequence(PlayableDirector director)
         {
-            controller.CancelAttack();
-            controller.StopMoving();
+            controller.OnCancelAttack();
+            controller.OnStopMoving();
             controller.enabled = false;
         }
 
@@ -43,8 +43,6 @@ namespace RPG.Controller
         {
             controller.enabled = true;
         }
-
-
 
     }
 }

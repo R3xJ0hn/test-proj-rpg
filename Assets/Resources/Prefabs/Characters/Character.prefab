@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3351686997838560889}
   - component: {fileID: 5586610481821448511}
   - component: {fileID: -400500877090610885}
+  - component: {fileID: -4920582149830894250}
   m_Layer: 0
   m_Name: Character
   m_TagString: Enemy
@@ -150,3 +151,17 @@ MonoBehaviour:
   weaponRange: 1.5
   timeBetweenAttacks: 0.4
   weaponDamage: 50
+--- !u!114 &-4920582149830894250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507591598306384740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fce55d2354d458f44bca350ad271860e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerType: 2
+  patrolPath: {fileID: 0}

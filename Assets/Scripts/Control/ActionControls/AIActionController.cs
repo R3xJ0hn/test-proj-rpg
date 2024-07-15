@@ -1,26 +1,35 @@
-﻿using RPG.Movement;
+﻿using RPG.Combat;
+using RPG.Controls.ActionControls;
+using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPG.Controller
+namespace RPG.Control.ActionControls
 {
-    public class AIController : EntityController
+    public class AIActionController : MonoBehaviour, IEntityActionController
     {
         enum State { Idle, Patrol, Chase, Attack, Suspicion }
 
         State currentState = State.Idle;
-        [SerializeField] PatrolPath patrolPath;
         [SerializeField] float suspicionDuration = 7f;
         [SerializeField] float wanderRadius = 5f;
         [SerializeField] float lookAroundDuration = 2f;
         [SerializeField] float chaseDistance = 4.5f;
         [SerializeField] float wayPointTolerance = 1f;
         [SerializeField] float wayPointDwellTime = 3f;
-        [SerializeField] float viewDistance = 10f;
+        [SerializeField] float viewDistance = 7f;
         [SerializeField] float viewAngle = 45f;
 
+        public event Action<GameObject> AttackEvent;
+        public event Action<Vector2> MoveByNormalizedVectorEvent;
+        public event Action<Vector3> MoveToEvent;
+        public event Action CancelAttackEvent;
+        public event Action SprintEvent;
+        public event Action StopMovingEvent;
+
         private GameObject player;
+        private PatrolPath patrolPath;
         private Vector3 guardPosition;
         private float timeSinceLastSawPlayer = Mathf.Infinity;
         private float timeSinceArrivedAtWaypoint = Mathf.Infinity;
@@ -28,25 +37,28 @@ namespace RPG.Controller
         private bool isWandering = false;
         private bool isLookingAround = false;
         private int currentWayPointIndex = 0;
+        private bool isDead;
+
+        public PatrolPath PatrolPath { set => patrolPath = value; }
+        public float ChaseDistance { set => chaseDistance = value; }
+        public bool IsDead { set => isDead = value; }
+        public bool AllowedToRun { get; set; }
 
         private void Awake()
         {
             player = GameObject.FindWithTag("Player");
             guardPosition = transform.position;
-            InitializeComponents();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             timeSinceLastSawPlayer += Time.deltaTime;
             timeSinceArrivedAtWaypoint += Time.deltaTime;
-            AllowedToRun = true;
 
-            if (!IsDead())
+            if (!isDead)
                 AIStateBehavior();
         }
-
-        void AIStateBehavior()
+        private void AIStateBehavior()
         {
             switch (currentState)
             {
@@ -80,6 +92,7 @@ namespace RPG.Controller
             }
             else if (patrolPath != null)
             {
+                PatrolBehavior();
                 currentState = State.Patrol;
             }
         }
@@ -97,7 +110,7 @@ namespace RPG.Controller
 
             if (timeSinceArrivedAtWaypoint > wayPointDwellTime)
             {
-                MoveTo(GetCurrentWayPoint());
+                OnMoveTo(GetCurrentWayPoint());
             }
 
             if (IsPlayerWithinView())
@@ -110,6 +123,7 @@ namespace RPG.Controller
         {
             if (IsPlayerWithinView())
             {
+                AllowedToRun = true;
                 timeSinceLastSawPlayer = 0;
                 currentState = State.Attack;
             }
@@ -120,7 +134,7 @@ namespace RPG.Controller
             }
             else
             {
-                MoveTo(player.transform.position);
+                OnMoveTo(player.transform.position);
             }
         }
 
@@ -128,13 +142,25 @@ namespace RPG.Controller
         {
             if (IsPlayerWithinView())
             {
-                Sprint();
-                Attack(player);
+                SprintEvent?.Invoke();
+                AttackEvent?.Invoke(player);
             }
             else
             {
                 currentState = State.Suspicion;
             }
+        }
+
+        private IEnumerator LookAroundBehavior()
+        {
+            isLookingAround = true;
+            float lookAroundEndTime = Time.time + lookAroundDuration;
+            while (Time.time < lookAroundEndTime)
+            {
+                transform.Rotate(Vector3.up, 45 * Time.deltaTime);
+                yield return null;
+            }
+            isLookingAround = false;
         }
 
         private void SuspicionBehavior()
@@ -155,7 +181,7 @@ namespace RPG.Controller
             else if (suspicionTime > suspicionDuration + lookAroundDuration)
             {
                 currentState = patrolPath != null ? State.Patrol : State.Idle;
-                MoveTo(guardPosition);
+                OnMoveTo(guardPosition);
             }
         }
 
@@ -163,13 +189,13 @@ namespace RPG.Controller
         {
             isWandering = true;
 
-            Vector3 wanderDestination = guardPosition + 
-                new Vector3(Random.Range(-wanderRadius, wanderRadius), 0, 
-                Random.Range(-wanderRadius, wanderRadius));
+            Vector3 wanderDestination = guardPosition +
+                new Vector3(UnityEngine.Random.Range(-wanderRadius, wanderRadius), 0,
+                UnityEngine.Random.Range(-wanderRadius, wanderRadius));
 
-            MoveTo(wanderDestination);
+            OnMoveTo(wanderDestination);
 
-            StartCoroutine(LookAroundBehavior()); 
+            StartCoroutine(LookAroundBehavior());
 
             while (Vector3.Distance(transform.position, wanderDestination) > 1f)
             {
@@ -179,16 +205,10 @@ namespace RPG.Controller
             isWandering = false;
         }
 
-        private IEnumerator LookAroundBehavior()
+
+        private void OnMoveTo(Vector3 targetPos)
         {
-            isLookingAround = true;
-            float lookAroundEndTime = Time.time + lookAroundDuration;
-            while (Time.time < lookAroundEndTime)
-            {
-                transform.Rotate(Vector3.up, 45 * Time.deltaTime);
-                yield return null;
-            }
-            isLookingAround = false;
+            MoveToEvent?.Invoke(targetPos);
         }
 
         private bool IsPlayerWithinView()
@@ -224,5 +244,6 @@ namespace RPG.Controller
             Handles.color = isWandering ? Color.blue : Color.red;
             Handles.DrawWireDisc(transform.position, Vector3.up, chaseDistance);
         }
+
     }
 }

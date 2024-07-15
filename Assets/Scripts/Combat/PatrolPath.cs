@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RPG.Controller
+namespace RPG.Combat
 {
     public class PatrolPath : MonoBehaviour
     {

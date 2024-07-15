@@ -1,4 +1,3 @@
-using RPG.Movement;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -8,7 +7,6 @@ namespace RPG.Combat
 
     public class Fighter : MonoBehaviour
     {
-        [SerializeField] private float weaponRange = 1.5f;
         [SerializeField] private float timeBetweenAttacks = 0.5f;
         [SerializeField] private float weaponDamage = 5f;
 
@@ -17,6 +15,11 @@ namespace RPG.Combat
         private Health targetHealth;
         private Transform targetTransform;
         private float timeSinceLastAttack = Mathf.Infinity;
+
+        public float AttackRange { get; set; } = 4f;
+        public float WeaponRange { get; set; } = 1.5f;
+        public float WeaponDamage { get; set; } = 1.5f;
+
 
         private void Awake()
         {
@@ -33,7 +36,7 @@ namespace RPG.Combat
 
             timeSinceLastAttack += Time.deltaTime;
             bool isInRange = Vector3.Distance(transform.position,
-                targetHealth.transform.position) < weaponRange;
+                targetHealth.transform.position) < WeaponRange;
 
             if (targetHealth != null && !isInRange)
             {

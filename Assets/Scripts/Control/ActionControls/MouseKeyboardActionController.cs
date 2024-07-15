@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using RPG.Controls.ActionControls;
+using System;
+using UnityEngine;
 
-namespace RPG.Controller
+namespace RPG.Control.ActionControls
 {
-    public class PCController : EntityController
+    public class MouseKeyboardActionController : MonoBehaviour, IEntityActionController
     {
         private float clicked = 0;
         private float clickTime = 0;
@@ -11,17 +13,31 @@ namespace RPG.Controller
 
         private Camera mainCamera;
         private GameObject targetEnemy;
+        private float attackRange;
+        private bool isDead;
+
+
+        public event Action<GameObject> AttackEvent;
+        public event Action<Vector2> MoveByNormalizedVectorEvent;
+        public event Action<Vector3> MoveToEvent;
+        public event Action CancelAttackEvent;
+        public event Action SprintEvent;
+        public event Action StopMovingEvent;
+
+        public float ChaseDistance { set => attackRange = value; }
+        public bool IsDead { set => isDead = value; }
+        public bool AllowedToRun { get; set; }
 
         private void Awake()
         {
             mainCamera = Camera.main;
-            InitializeComponents();
         }
+
         private void LateUpdate()
         {
             MovePlayer();
-            AttackEnemy();
             SetSprint();
+            AttackEnemy();
         }
 
         private void MovePlayer()
@@ -30,9 +46,19 @@ namespace RPG.Controller
             {
                 if (Physics.Raycast(GetMouseRay(), out RaycastHit hit))
                 {
-                    MoveTo(hit.point);
+                    MoveToEvent?.Invoke(hit.point);
+                    CancelAttack();
                 }
             }
+        }
+
+        private void SetSprint()
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                SprintEvent?.Invoke();
+            }
+
         }
 
         public void AttackEnemy()
@@ -50,8 +76,10 @@ namespace RPG.Controller
                 }
             }
 
-            Attack(targetEnemy);
+            if (targetEnemy != null)
+                AttackEvent?.Invoke(targetEnemy);
         }
+
 
         private bool SetAnAttack()
         {
@@ -72,20 +100,11 @@ namespace RPG.Controller
             return false;
         }
 
-        private void SetSprint()
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                Sprint();
-            }
-           
-        }
-
-        public override void CancelAttack()
+        public void CancelAttack()
         {
             prepToAttack = false;
             targetEnemy = null;
-            base.CancelAttack();
+            CancelAttackEvent?.Invoke();
         }
 
         private Ray GetMouseRay()
@@ -118,7 +137,6 @@ namespace RPG.Controller
             return false;
         }
 
+
     }
-
-
 }

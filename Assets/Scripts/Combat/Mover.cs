@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace RPG.Movement
+namespace RPG.Combat
 {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
@@ -24,7 +24,7 @@ namespace RPG.Movement
         private readonly float speedIncreaseRate = 0.5f;
         private bool isSprinting = false;
 
-        public bool allowWalkingSpeedIncrease { get; set; } = true;
+        public bool WalkingSpeedIncrease { get; set; } = true;
 
         private void Awake()
         {
@@ -78,7 +78,7 @@ namespace RPG.Movement
 
         private void UpdateSpeed()
         {
-            if (IsMoving() && allowWalkingSpeedIncrease)
+            if (IsMoving() && WalkingSpeedIncrease)
             {
                 if (!isSprinting)
                     agent.speed = Mathf.Min(agent.speed + 
